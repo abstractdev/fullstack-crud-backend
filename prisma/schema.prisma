@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//prisma enums must be all caps. Must send role in all caps in req.body
+enum Role {
+  USER
+  ADMIN
+}
+
+//name and email character limit of 20 is arbitrary, just need to set upper bound
+//Bcrypt's hash has a maximum length of 72
+model User {
+  id       String @id @default(uuid())
+  name     String @db.VarChar(20)
+  email    String @unique @db.VarChar(20)
+  password String @db.VarChar(72)
+  role     Role
+}
