@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { body, check, validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
@@ -68,7 +69,28 @@ export const userSignupPost = [
               role,
             },
           });
-          res.status(200).json({ 200: "User Created" });
+          if (user) {
+            const token = jwt.sign(
+              {
+                id: user?.id,
+                name: user?.name,
+                email: user?.email,
+                role: user?.role,
+              },
+              process.env.JWT_SECRET!
+            );
+            //place JWT inside httpOnly cookie and send cookie in response along with status code
+            return res
+              .cookie("authToken", token, {
+                httpOnly: true,
+                sameSite: "none",
+                secure: true,
+              })
+              .status(200)
+              .json({ 200: "User Created" });
+          } else {
+            res.status(400).json({ 400: "Bad Request" });
+          }
         })();
       });
     })();
