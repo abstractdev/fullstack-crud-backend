@@ -20,6 +20,7 @@ export const allUsersGet = [
               select: {
                 name: true,
                 email: true,
+                role: true,
               },
             });
             res.status(200).json(users);
