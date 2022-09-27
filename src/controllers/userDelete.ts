@@ -20,7 +20,7 @@ export const userDelete = [
             const deletedUser = await prisma.user.delete({
               where: { id },
             });
-            res.status(200).json({ deleted: deletedUser });
+            res.status(200).json({ 200: deletedUser.id });
           })();
         } else {
           res.status(403).json({ 403: "Forbidden" });

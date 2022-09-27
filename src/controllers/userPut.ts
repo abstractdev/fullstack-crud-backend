@@ -38,7 +38,9 @@ export const userPut = [
               where: { id },
               data: { name },
             });
-            res.status(200).json({ name: updatedUser.name });
+            res
+              .status(200)
+              .json({ 200: updatedUser.id, name: updatedUser.name });
           })();
         } else {
           res.status(403).json({ 403: "Forbidden" });
